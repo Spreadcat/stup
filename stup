@@ -765,11 +765,23 @@ parse_options()
 {
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      today|tomorrow|yesterday)
+      today|tomorrow|next|yesterday)
         AT="$1"
         shift
         ;;
-      week|month|year|previous-week|previous-month|previous-year)
+      monday|tuesday|wednesday|thursday|friday|saturday|sunday)
+        AT="$1"
+        shift
+        ;;
+      last-monday|last-tuesday|last-wednesday|last-thursday|last-friday|last-saturday|last-sunday)
+        AT="$1"
+        shift
+        ;;
+      # next-monday|next-tuesday|next-wednesday|next-thursday|next-friday|next-saturday|next-sunday)
+      #   AT="$1"
+      #   shift
+      #   ;;
+      week|month|year|previous-week|last-week|previous-month|last-month|previous-year|last-year)
         FROM_TO_ALIAS="$1"
         if [ -z "$COMMAND" ];then
           COMMAND="log"
@@ -1164,6 +1176,36 @@ extract_date_components()
       MONTH=$(date -d "$AT" +"%m")
       DAY=$(date -d "$AT" +"%d")
       ;;
+    next)
+      AT='tomorrow'
+      YEAR=$(date -d "$AT" +"%Y")
+      MONTH=$(date -d "$AT" +"%m")
+      DAY=$(date -d "$AT" +"%d")
+      ;;
+    monday|tuesday|wednesday|thursday|friday|saturday|sunday)
+      YEAR=$(date -d "this $AT" +"%Y")
+      MONTH=$(date -d "this $AT" +"%m")
+      DAY=$(date -d "this $AT" +"%d")
+      ;;
+    last-monday|last-tuesday| \
+    last-wednesday|last-thursday| \
+    last-friday|last-saturday| \
+    last-sunday)
+      AT="last ${AT//last\-/}"
+      YEAR=$(date -d "$AT" +"%Y")
+      MONTH=$(date -d "$AT" +"%m")
+      DAY=$(date -d "$AT" +"%d")
+      ;;
+    # next-monday|next-tuesday| \
+    # next-wednesday|next-thursday| \
+    # next-friday|next-saturday| \
+    # next-sunday)
+    #   AT="this ${AT//next\-/}"
+    #   echo $AT
+    #   YEAR=$(date -d "$AT" +"%Y")
+    #   MONTH=$(date -d "$AT" +"%m")
+    #   DAY=$(date -d "$AT" +"%d")
+    #   ;;
     *)
       IFS='-' read -ra parts <<< "$AT"
       YEAR="${parts[0]}"
