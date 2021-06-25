@@ -50,7 +50,7 @@ NOTES_PREFIX='- '
 
 # Version
 # TODO: update version upon new releases
-VERSION="v1.0.0"
+VERSION="v1.1.0"
 
 # Some defaults (can be changed from configuration file)
 DEFAULT_COMMAND="show"
@@ -150,11 +150,26 @@ execute()
   esac
 }
 
+# Parses additional (human) date descriptions
+# into technical terms
+parse_date()
+{
+  local date_string
+  date_string="$1"
+  case "${date_string}" in
+    monday|tuesday|wednesday| \
+    thursday|friday|saturday|sunday)
+      date_string=$(date -d "this ${date_string}" +%Y%m%d)
+      ;;
+  esac
+  echo "$date_string"
+}
+
 # Shows the notes added for a specific date
 execute_show()
 {
   if [[ $1 ]]; then
-    AT="$1"
+    AT=$1
   fi
 
   resolve_date
@@ -766,23 +781,23 @@ parse_options()
   while [[ $# -gt 0 ]]; do
     case "$1" in
       today|tomorrow|next|yesterday)
-        AT="$1"
+        AT=$(parse_date "$1")
         shift
         ;;
       monday|tuesday|wednesday|thursday|friday|saturday|sunday)
-        AT="$1"
+        AT=$(parse_date "$1")
         shift
         ;;
-      last-monday|last-tuesday|last-wednesday|last-thursday|last-friday|last-saturday|last-sunday)
-        AT="$1"
-        shift
-        ;;
+#      last-monday|last-tuesday|last-wednesday|last-thursday|last-friday|last-saturday|last-sunday)
+#        AT=$(parse_date "$1")
+#        shift
+#        ;;
       # next-monday|next-tuesday|next-wednesday|next-thursday|next-friday|next-saturday|next-sunday)
       #   AT="$1"
       #   shift
       #   ;;
       week|month|year|previous-week|last-week|previous-month|last-month|previous-year|last-year)
-        FROM_TO_ALIAS="$1"
+        FROM_TO_ALIAS="$3"
         if [ -z "$COMMAND" ];then
           COMMAND="log"
         fi
