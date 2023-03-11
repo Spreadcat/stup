@@ -50,7 +50,7 @@ NOTES_PREFIX='- '
 
 # Version
 # TODO: update version upon new releases
-VERSION="v1.0.0"
+VERSION="v1.0.1"
 
 # Some defaults (can be changed from configuration file)
 DEFAULT_COMMAND="show"
@@ -776,14 +776,14 @@ parse_options()
         fi
         shift
         ;;
-      --from)
+      --from|-f)
         FROM_AT="$2"
         if [ -z "$COMMAND" ]; then
           COMMAND="log"
         fi
         shift 2
         ;;
-      --to)
+      --to|-t)
         TO_AT="$2"
         if [ -z "$COMMAND" ]; then
           COMMAND="log"
