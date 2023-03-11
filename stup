@@ -50,7 +50,7 @@ NOTES_PREFIX='- '
 
 # Version
 # TODO: update version upon new releases
-VERSION="v1.0.0"
+VERSION="v1.0.1"
 
 # Some defaults (can be changed from configuration file)
 DEFAULT_COMMAND="show"
@@ -803,7 +803,7 @@ parse_options()
         fi
         shift
         ;;
-      --from)
+      --from|-f)
         if [ -z "$2" ]; then
           print_error "Flag \"--from\" was present but no \"from\" argument was passed"
           exit 1
@@ -815,7 +815,7 @@ parse_options()
         fi
         shift 2
         ;;
-      --to)
+      --to|-t)
         if [ -z "$2" ]; then
           print_error "Flag \"--to\" was present but no \"to\" argument was passed"
           exit 1
